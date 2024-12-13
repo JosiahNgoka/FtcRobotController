@@ -33,7 +33,7 @@ public class Terminator extends LinearOpMode {
 
         while (opModeIsActive()) {
 
-            //Gamepad 1 Functions
+            //Gamepad 1 Function Code
             {
                 double leftSpeed = gamepad1.left_stick_y * moveSpeed;
                 double rightSpeed = -gamepad1.right_stick_y * moveSpeed;
@@ -58,7 +58,7 @@ public class Terminator extends LinearOpMode {
                 }
             }
 
-            //Gamepad 2 Functions
+            //Gamepad 2 Function Code
             {
                 if (gamepad2.right_trigger > 0) {
                     support.setTargetPosition(600);
