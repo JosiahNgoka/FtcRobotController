@@ -27,7 +27,7 @@ public class Terminator extends LinearOpMode {
         support.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         support.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        moveSpeed = 0.75;
+        moveSpeed = 1;
 
         waitForStart();
 
@@ -35,42 +35,64 @@ public class Terminator extends LinearOpMode {
 
             //Gamepad 1 Function Code
             {
-                double leftSpeed = gamepad1.left_stick_y * moveSpeed;
+                //Set the motor speeds to their respective side's joystick
+                double leftSpeed = -gamepad1.left_stick_y * moveSpeed;
                 double rightSpeed = -gamepad1.right_stick_y * moveSpeed;
 
+                //Left and Right Drive Code
                 fl.setPower(leftSpeed);
                 bl.setPower(-leftSpeed);
                 fr.setPower(rightSpeed);
                 br.setPower(rightSpeed);
 
-                if (gamepad1.left_bumper){
-                    fl.setPower(-leftSpeed);
-                    bl.setPower(-leftSpeed);
-                    fr.setPower(-rightSpeed);
-                    br.setPower(rightSpeed);
+                //Full Force Forwards
+                if (gamepad1.dpad_up){
+                    fl.setPower(moveSpeed);
+                    bl.setPower(-moveSpeed);
+                    fr.setPower(moveSpeed);
+                    br.setPower(moveSpeed);
                 }
 
+                //Full Force Backwards
+                if (gamepad1.dpad_down){
+                    fl.setPower(-moveSpeed);
+                    bl.setPower(moveSpeed);
+                    fr.setPower(-moveSpeed);
+                    br.setPower(-moveSpeed);
+                }
+
+                //Diagonal Strafe Right
+                if (gamepad1.right_trigger > 0){
+                    bl.setPower(-moveSpeed);
+                    br.setPower(moveSpeed);
+                }
+
+                //Diagonal Strafe Left
+                if (gamepad1.left_trigger > 0){
+                    fl.setPower(moveSpeed);
+                    fr.setPower(moveSpeed);
+                }
+
+                //Strafe Right
                 if (gamepad1.right_bumper){
-                    fl.setPower(leftSpeed);
-                    bl.setPower(leftSpeed);
-                    fr.setPower(rightSpeed);
-                    br.setPower(-rightSpeed);
+                    fl.setPower(-moveSpeed);
+                    bl.setPower(-moveSpeed);
+                    fr.setPower(-moveSpeed);
+                    br.setPower(moveSpeed);
+                }
+
+                //Strafe Left
+                if (gamepad1.left_bumper){
+                    fl.setPower(moveSpeed);
+                    bl.setPower(moveSpeed);
+                    fr.setPower(moveSpeed);
+                    br.setPower(-moveSpeed);
                 }
             }
 
             //Gamepad 2 Function Code
             {
-                if (gamepad2.right_trigger > 0) {
-                    support.setTargetPosition(600);
-                    support.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                    support.setVelocity(500 * gamepad2.right_trigger);
-                } else if (gamepad2.left_trigger > 0) {
-                    support.setTargetPosition(60);
-                    support.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                    support.setVelocity(500 * gamepad2.left_trigger);
-                } else {
-                    support.setVelocity(3);
-                }
+
             }
         }
     }
