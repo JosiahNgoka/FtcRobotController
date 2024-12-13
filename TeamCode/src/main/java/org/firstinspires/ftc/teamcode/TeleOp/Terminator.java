@@ -6,13 +6,15 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 
 @TeleOp (name = "armPos", group = "testing")
-public class supportPos extends LinearOpMode {
+public class Terminator extends LinearOpMode {
 
     private DcMotorEx support = null;
     private DcMotor fl = null;
     private DcMotor bl = null;
     private DcMotor fr = null;
     private DcMotor br = null;
+
+    private double moveSpeed; //variable to control speed
 
     @Override
     public void runOpMode() {
@@ -25,29 +27,50 @@ public class supportPos extends LinearOpMode {
         support.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         support.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
+        moveSpeed = 0.75;
+
         waitForStart();
 
         while (opModeIsActive()) {
 
-            double leftSpeed = gamepad1.left_stick_y;
-            double rightSpeed = -gamepad1.right_stick_y;
+            //Gamepad 1 Functions
+            {
+                double leftSpeed = gamepad1.left_stick_y * moveSpeed;
+                double rightSpeed = -gamepad1.right_stick_y * moveSpeed;
 
-            fl.setPower(leftSpeed);
-            bl.setPower(-leftSpeed);
-            fr.setPower(rightSpeed);
-            br.setPower(rightSpeed);
+                fl.setPower(leftSpeed);
+                bl.setPower(-leftSpeed);
+                fr.setPower(rightSpeed);
+                br.setPower(rightSpeed);
 
+                if (gamepad1.left_bumper){
+                    fl.setPower(-leftSpeed);
+                    bl.setPower(-leftSpeed);
+                    fr.setPower(-rightSpeed);
+                    br.setPower(rightSpeed);
+                }
 
-            if (gamepad2.right_trigger > 0) {
-                support.setTargetPosition(600);
-                support.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                support.setVelocity(500 * gamepad2.right_trigger);
-            } else if (gamepad2.left_trigger > 0) {
-                support.setTargetPosition(60);
-                support.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                support.setVelocity(500 * gamepad2.left_trigger);
-            } else {
-                support.setVelocity(3);
+                if (gamepad1.right_bumper){
+                    fl.setPower(leftSpeed);
+                    bl.setPower(leftSpeed);
+                    fr.setPower(rightSpeed);
+                    br.setPower(-rightSpeed);
+                }
+            }
+
+            //Gamepad 2 Functions
+            {
+                if (gamepad2.right_trigger > 0) {
+                    support.setTargetPosition(600);
+                    support.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                    support.setVelocity(500 * gamepad2.right_trigger);
+                } else if (gamepad2.left_trigger > 0) {
+                    support.setTargetPosition(60);
+                    support.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                    support.setVelocity(500 * gamepad2.left_trigger);
+                } else {
+                    support.setVelocity(3);
+                }
             }
         }
     }
