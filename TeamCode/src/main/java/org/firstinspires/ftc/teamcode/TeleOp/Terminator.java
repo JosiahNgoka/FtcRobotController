@@ -2,32 +2,37 @@ package org.firstinspires.ftc.teamcode.TeleOp;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.Servo;
 
-@TeleOp (name = "armPos", group = "testing")
+@TeleOp (name = "terminatorCode", group = "testing")
 public class Terminator extends LinearOpMode {
 
-    private DcMotorEx support = null;
+    private DcMotor support = null;
+    private DcMotor sliderArm = null;
+    private CRServo intake = null;
     private DcMotor fl = null;
     private DcMotor bl = null;
     private DcMotor fr = null;
     private DcMotor br = null;
 
     private double moveSpeed; //variable to control speed
+    private double armSpeed; //variable to control the arm speed
 
     @Override
     public void runOpMode() {
-        support = hardwareMap.get(DcMotorEx.class, "Arm");
+        support = hardwareMap.get(DcMotor.class, "Arm");
+        sliderArm = hardwareMap.get(DcMotor.class, "armRight");
+        intake = hardwareMap.get(CRServo.class, "Intake");
         fl = hardwareMap.get(DcMotor.class, "Left-Front");
         bl = hardwareMap.get(DcMotor.class, "Left-Back");
         fr = hardwareMap.get(DcMotor.class, "Right-Front");
         br = hardwareMap.get(DcMotor.class, "Right-Back");
 
-        support.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        support.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
         moveSpeed = 1;
+        armSpeed = 0.5;
 
         waitForStart();
 
@@ -92,7 +97,22 @@ public class Terminator extends LinearOpMode {
 
             //Gamepad 2 Function Code
             {
+                intake.setPower(gamepad2.left_stick_y * armSpeed);
+                if (gamepad2.left_bumper){
+                    sliderArm.setPower(1);
+                } else if (gamepad2.right_bumper){
+                    sliderArm.setPower(-1);
+                } else{
+                    sliderArm.setPower(0);
+                }
 
+                if (gamepad2.left_trigger > 0) {
+                    support.setPower(gamepad2.left_trigger * 0.8);
+                } else if (gamepad2.right_trigger > 0){
+                support.setPower(gamepad2.right_trigger * -0.2);
+                } else {
+                    support.setPower(0);
+                }
             }
         }
     }
