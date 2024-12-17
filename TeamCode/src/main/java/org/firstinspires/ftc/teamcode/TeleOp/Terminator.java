@@ -106,15 +106,15 @@ public class Terminator extends LinearOpMode {
             {
                 intake.setPower(gamepad2.left_stick_y * intakeSpeed);
 
-                sliderArm.setPower(sliderValue);
+                sliderArm.setPower(gamepad2.right_stick_y * 0.75);
 
-                //If the above sliderArm code does not work
-                if (0 == 1){
+                //Slider Arm Code
+                if(0 == 1){
                     if (gamepad2.dpad_up){
-                        sliderArm.setPower(sliderSpeed);
+                        sliderArm.setPower(-sliderSpeed);
                     }
                     else if (gamepad2.dpad_down){
-                        sliderArm.setPower(-sliderSpeed);
+                        sliderArm.setPower(sliderSpeed);
                     }
                     else{
                         sliderArm.setPower(0);
