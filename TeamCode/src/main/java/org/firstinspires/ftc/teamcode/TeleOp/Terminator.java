@@ -19,7 +19,10 @@ public class Terminator extends LinearOpMode {
     private DcMotor br = null;
 
     private double moveSpeed; //variable to control speed
+    private double intakeSpeed; //variable to control the speed of the intake
     private double armSpeed; //variable to control the arm speed
+    private double sliderValue; //variable to get the slider gamepad input
+    private double sliderSpeed; //variable to control the slider speed
 
     @Override
     public void runOpMode() {
@@ -32,7 +35,10 @@ public class Terminator extends LinearOpMode {
         br = hardwareMap.get(DcMotor.class, "Right-Back");
 
         moveSpeed = 1;
-        armSpeed = 0.5;
+        intakeSpeed = 1;
+        armSpeed = 0.8;
+        sliderValue = 0;
+        sliderSpeed = 0.7;
 
         waitForStart();
 
@@ -43,6 +49,7 @@ public class Terminator extends LinearOpMode {
                 //Set the motor speeds to their respective side's joystick
                 double leftSpeed = -gamepad1.left_stick_y * moveSpeed;
                 double rightSpeed = -gamepad1.right_stick_y * moveSpeed;
+                double sliderValue = gamepad2.right_stick_y * sliderSpeed;
 
                 //Left and Right Drive Code
                 fl.setPower(leftSpeed);
@@ -97,19 +104,27 @@ public class Terminator extends LinearOpMode {
 
             //Gamepad 2 Function Code
             {
-                intake.setPower(gamepad2.left_stick_y * armSpeed);
-                if (gamepad2.left_bumper){
-                    sliderArm.setPower(1);
-                } else if (gamepad2.right_bumper){
-                    sliderArm.setPower(-1);
-                } else{
-                    sliderArm.setPower(0);
+                intake.setPower(gamepad2.left_stick_y * intakeSpeed);
+
+                sliderArm.setPower(sliderValue);
+
+                //If the above sliderArm code does not work
+                if (0 == 1){
+                    if (gamepad2.dpad_up){
+                        sliderArm.setPower(sliderSpeed);
+                    }
+                    else if (gamepad2.dpad_down){
+                        sliderArm.setPower(-sliderSpeed);
+                    }
+                    else{
+                        sliderArm.setPower(0);
+                    }
                 }
 
                 if (gamepad2.left_trigger > 0) {
-                    support.setPower(gamepad2.left_trigger * 0.8);
+                    support.setPower(gamepad2.left_trigger * armSpeed);
                 } else if (gamepad2.right_trigger > 0){
-                support.setPower(gamepad2.right_trigger * -0.2);
+                    support.setPower(gamepad2.right_trigger * -armSpeed);
                 } else {
                     support.setPower(0);
                 }
