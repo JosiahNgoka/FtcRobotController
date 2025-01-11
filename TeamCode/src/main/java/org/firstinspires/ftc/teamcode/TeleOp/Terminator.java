@@ -23,6 +23,7 @@ public class Terminator extends LinearOpMode {
     private double armSpeed; //variable to control the arm speed
     private double sliderValue; //variable to get the slider gamepad input
     private double sliderSpeed; //variable to control the slider speed
+    private boolean isHanging;
 
     @Override
     public void runOpMode() {
@@ -34,17 +35,18 @@ public class Terminator extends LinearOpMode {
         fr = hardwareMap.get(DcMotor.class, "Right-Front");
         br = hardwareMap.get(DcMotor.class, "Right-Back");
 
-        moveSpeed = 1;
+        //Variable
+        moveSpeed = 0.9;
         intakeSpeed = 1;
-        armSpeed = 0.8;
+        armSpeed = 1;
         sliderValue = 0;
-        sliderSpeed = 0.7;
+        sliderSpeed = 0.8;
 
         waitForStart();
 
         while (opModeIsActive()) {
 
-            //Gamepad 1 Function Code
+            //Player 1 Function Code
             {
                 //Set the motor speeds to their respective side's joystick
                 double leftSpeed = -gamepad1.left_stick_y * moveSpeed;
@@ -102,31 +104,31 @@ public class Terminator extends LinearOpMode {
                 }
             }
 
-            //Gamepad 2 Function Code
+            //Player 2 Function Code
             {
-                intake.setPower(gamepad2.left_stick_y * intakeSpeed);
-
-                sliderArm.setPower(gamepad2.right_stick_y * 0.75);
+                intake.setPower(gamepad2.left_stick_y * 1);
 
                 //Slider Arm Code
-                if(0 == 1){
-                    if (gamepad2.dpad_up){
-                        sliderArm.setPower(-sliderSpeed);
-                    }
-                    else if (gamepad2.dpad_down){
-                        sliderArm.setPower(sliderSpeed);
-                    }
-                    else{
-                        sliderArm.setPower(0);
-                    }
-                }
+                sliderArm.setPower(gamepad2.right_stick_y * 0.75);
 
+                //Support Arm Code
                 if (gamepad2.left_trigger > 0) {
                     support.setPower(gamepad2.left_trigger * armSpeed);
                 } else if (gamepad2.right_trigger > 0){
                     support.setPower(gamepad2.right_trigger * -armSpeed);
                 } else {
                     support.setPower(0);
+                }
+
+                //Hand Code
+                if (gamepad2.a)
+                {
+                    isHanging = true;
+                }
+
+                if (isHanging)
+                {
+                    support.setPower(-1);
                 }
             }
         }
