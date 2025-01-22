@@ -35,8 +35,8 @@ public class Terminator extends LinearOpMode {
         fr = hardwareMap.get(DcMotor.class, "Right-Front");
         br = hardwareMap.get(DcMotor.class, "Right-Back");
 
-        //Variable
-        moveSpeed = 0.9;
+        //Set the Variables
+        moveSpeed = 0.8;
         intakeSpeed = 1;
         armSpeed = 1;
         sliderValue = 0;
