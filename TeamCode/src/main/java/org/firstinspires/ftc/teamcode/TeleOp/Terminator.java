@@ -7,11 +7,14 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.Servo;
 
-@TeleOp (name = "terminatorCode", group = "testing")
+@TeleOp (name = "terminatorCode", group = "official")
 public class Terminator extends LinearOpMode {
 
     private DcMotor support = null;
     private DcMotor sliderArm = null;
+    private DcMotor specimenSlider = null;
+    private Servo gripServo1 = null;
+    private Servo gripServo2 = null;
     private CRServo intake = null;
     private DcMotor fl = null;
     private DcMotor bl = null;
@@ -30,6 +33,9 @@ public class Terminator extends LinearOpMode {
         support = hardwareMap.get(DcMotor.class, "Arm");
         sliderArm = hardwareMap.get(DcMotor.class, "armRight");
         intake = hardwareMap.get(CRServo.class, "Intake");
+        gripServo1 = hardwareMap.get(CRservo.class, "gripServo1");
+        gripServo2 = hardwareMap.get(Servo.class, "gripServo2");
+        specimenSlider = hardwareMap.get(DcMotor.class, "specimenSlider");
         fl = hardwareMap.get(DcMotor.class, "Left-Front");
         bl = hardwareMap.get(DcMotor.class, "Left-Back");
         fr = hardwareMap.get(DcMotor.class, "Right-Front");
@@ -129,6 +135,16 @@ public class Terminator extends LinearOpMode {
                 if (isHanging)
                 {
                     support.setPower(-1);
+                }
+
+                //Move the servos
+                if(gamepad2.left_bumper)
+                {
+                    gripServo1.setPosition(0.5);
+                }
+                if(gamepad2.right_bumper)
+                {
+                    gripServo1.setPosition(-0.5);
                 }
             }
         }
