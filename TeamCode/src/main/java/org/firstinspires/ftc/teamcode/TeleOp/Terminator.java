@@ -22,9 +22,7 @@ public class Terminator extends LinearOpMode {
     private DcMotor br = null;
 
     private double moveSpeed; //variable to control speed
-    private double intakeSpeed; //variable to control the speed of the intake
     private double armSpeed; //variable to control the arm speed
-    private double sliderValue; //variable to get the slider gamepad input
     private double sliderSpeed; //variable to control the slider speed
     private boolean isHanging;
 
@@ -33,7 +31,7 @@ public class Terminator extends LinearOpMode {
         support = hardwareMap.get(DcMotor.class, "Arm");
         sliderArm = hardwareMap.get(DcMotor.class, "armRight");
         intake = hardwareMap.get(CRServo.class, "Intake");
-        gripServo1 = hardwareMap.get(CRservo.class, "gripServo1");
+        gripServo1 = hardwareMap.get(Servo.class, "gripServo1");
         gripServo2 = hardwareMap.get(Servo.class, "gripServo2");
         specimenSlider = hardwareMap.get(DcMotor.class, "specimenSlider");
         fl = hardwareMap.get(DcMotor.class, "Left-Front");
@@ -42,10 +40,8 @@ public class Terminator extends LinearOpMode {
         br = hardwareMap.get(DcMotor.class, "Right-Back");
 
         //Set the Variables
-        moveSpeed = 0.8;
-        intakeSpeed = 1;
+        moveSpeed = 0.87;
         armSpeed = 1;
-        sliderValue = 0;
         sliderSpeed = 0.8;
 
         waitForStart();
@@ -138,13 +134,29 @@ public class Terminator extends LinearOpMode {
                 }
 
                 //Move the servos
-                if(gamepad2.left_bumper)
+                if (gamepad2.dpad_up)
                 {
-                    gripServo1.setPosition(0.5);
+                    specimenSlider.setPower(1);
                 }
-                if(gamepad2.right_bumper)
+                else if (gamepad2.dpad_down)
                 {
-                    gripServo1.setPosition(-0.5);
+                    specimenSlider.setPower(-1);
+                }
+                else
+                {
+                    specimenSlider.setPower(0);
+                }
+
+                if (gamepad2.dpad_left)
+                {
+                    gripServo1.setPosition(1);
+                    gripServo2.setPosition(-1);
+                }
+
+                if (gamepad2.dpad_right)
+                {
+                    gripServo1.setPosition(-1);
+                    gripServo2.setPosition(1);
                 }
             }
         }
