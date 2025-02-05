@@ -13,8 +13,8 @@ public class Terminator extends LinearOpMode {
     private DcMotor support = null;
     private DcMotor sliderArm = null;
     private DcMotor specimenSlider = null;
-    private Servo gripServo1 = null;
-    private Servo gripServo2 = null;
+    private CRServo gripServo1 = null;
+    private CRServo gripServo2 = null;
     private CRServo intake = null;
     private DcMotor fl = null;
     private DcMotor bl = null;
@@ -22,17 +22,20 @@ public class Terminator extends LinearOpMode {
     private DcMotor br = null;
 
     private double moveSpeed; //variable to control speed
+    private double intakeSpeed; //variable to control the speed of the intake
     private double armSpeed; //variable to control the arm speed
+    private double sliderValue; //variable to get the slider gamepad input
     private double sliderSpeed; //variable to control the slider speed
     private boolean isHanging;
+    private boolean isClamping;
 
     @Override
     public void runOpMode() {
         support = hardwareMap.get(DcMotor.class, "Arm");
         sliderArm = hardwareMap.get(DcMotor.class, "armRight");
         intake = hardwareMap.get(CRServo.class, "Intake");
-        gripServo1 = hardwareMap.get(Servo.class, "gripServo1");
-        gripServo2 = hardwareMap.get(Servo.class, "gripServo2");
+        gripServo1 = hardwareMap.get(CRServo.class, "gripServo1");
+        gripServo2 = hardwareMap.get(CRServo.class, "gripServo2");
         specimenSlider = hardwareMap.get(DcMotor.class, "specimenSlider");
         fl = hardwareMap.get(DcMotor.class, "Left-Front");
         bl = hardwareMap.get(DcMotor.class, "Left-Back");
@@ -40,9 +43,12 @@ public class Terminator extends LinearOpMode {
         br = hardwareMap.get(DcMotor.class, "Right-Back");
 
         //Set the Variables
-        moveSpeed = 0.87;
+        moveSpeed = 0.8;
+        intakeSpeed = 1;
         armSpeed = 1;
+        sliderValue = 0;    
         sliderSpeed = 0.8;
+        isClamping = false;
 
         waitForStart();
 
@@ -133,31 +139,50 @@ public class Terminator extends LinearOpMode {
                     support.setPower(-1);
                 }
 
-                //Move the servos
+                if (gamepad2.y && !isClamping)
+                {9
+                    isClamping = true;
+                }
+
+                if (gamepad2.y && isClamping)
+                {
+                    isClamping = false;
+                }
+
+                if (isClamping)
+                {
+                    gripServo1.setPower(1);
+                    gripServo2.setPower(-1);
+                }
+                else if(gamepad2.dpad_left)
+                {
+                    gripServo1.setPower(1);
+                    gripServo2.setPower(-1);
+                }
+                else if(gamepad2.dpad_right)
+                {
+                    gripServo1.setPower(-1);
+                    gripServo2.setPower(1);
+                }
+                else
+                {
+                    gripServo1.setPower(0);
+                    gripServo2.setPower(0);
+                }
+
                 if (gamepad2.dpad_up)
                 {
-                    specimenSlider.setPower(1);
+                    specimenSlider.setPower(-0.5);
                 }
                 else if (gamepad2.dpad_down)
                 {
-                    specimenSlider.setPower(-1);
+                    specimenSlider.setPower(0.5);
                 }
                 else
                 {
                     specimenSlider.setPower(0);
                 }
 
-                if (gamepad2.dpad_left)
-                {
-                    gripServo1.setPosition(1);
-                    gripServo2.setPosition(-1);
-                }
-
-                if (gamepad2.dpad_right)
-                {
-                    gripServo1.setPosition(-1);
-                    gripServo2.setPosition(1);
-                }
             }
         }
     }
