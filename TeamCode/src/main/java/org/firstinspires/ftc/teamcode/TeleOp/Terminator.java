@@ -154,12 +154,12 @@ public class Terminator extends LinearOpMode {
                     gripServo1.setPower(1);
                     gripServo2.setPower(-1);
                 }
-                else if(gamepad2.dpad_left)
+                else if(gamepad2.left_bumper)
                 {
                     gripServo1.setPower(1);
                     gripServo2.setPower(-1);
                 }
-                else if(gamepad2.dpad_right)
+                else if(gamepad2.right_bumper)
                 {
                     gripServo1.setPower(-1);
                     gripServo2.setPower(1);
