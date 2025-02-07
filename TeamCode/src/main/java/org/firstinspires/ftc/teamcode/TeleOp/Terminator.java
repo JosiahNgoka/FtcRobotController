@@ -140,7 +140,7 @@ public class Terminator extends LinearOpMode {
                 }
 
                 if (gamepad2.y && !isClamping)
-                {9
+                {
                     isClamping = true;
                 }
 
